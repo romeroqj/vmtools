@@ -1,0 +1,5 @@
+[Match]
+Type=ether
+
+[Link]
+Name=eth0

@@ -20,6 +20,7 @@ sudo apt-get install -y \
 # Check for /etc/rc.local and create if needed. This has been deprecated in
 # Debian 9 and later. So we need to resolve this in order to regenerate SSH host
 # keys.
+# FIXME: https://www.linuxbabe.com/linux-server/how-to-enable-etcrc-local-with-systemd
 if [ ! -f /etc/rc.local ]; then
     sudo bash -c "echo '#!/bin/sh -e' > /etc/rc.local"
     sudo bash -c "echo 'test -f /etc/ssh/ssh_host_dsa_key || dpkg-reconfigure openssh-server' >> /etc/rc.local"
@@ -35,9 +36,7 @@ else
     sudo bash -c "echo 'exit 0' >> /etc/rc.local"
 fi
 
-sudo bash -c "mv /tmp/interfaces /etc/network/interfaces"
-sudo bash -c "mv /tmp/10-if-eth0.link /etc/systemd/network/10-if-eth0.link"
-
+# FIXME: Move to cleanup.sh
 # Fix machine-id issue with duplicate IP addresses being assigned
 if [ -f /etc/machine-id ]; then
     sudo truncate -s 0 /etc/machine-id

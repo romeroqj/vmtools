@@ -10,27 +10,27 @@ variable "format" {
 
 variable "vcpus" {
   type    = string
-  default = "1"
+  default = "2"
 }
 
 variable "memory" {
   type    = string
-  default = "1024"
+  default = "512"
 }
 
 variable "disk_size" {
   type    = string
-  default = "32768"
+  default = "4000"
 }
 
 variable "iso_checksum" {
   type    = string
-  default = "file:./alpine-standard-3.17.0-x86_64.iso.sha256"
+  default = "file:./images/alpine-virt-3.17.0-x86_64.iso.sha256"
 }
 
 variable "iso_url" {
   type    = string
-  default = "./alpine-standard-3.17.0-x86_64.iso"
+  default = "./images/alpine-virt-3.17.0-x86_64.iso"
 }
 
 variable "ssh_username" {
@@ -62,8 +62,7 @@ source "qemu" "alpine" {
     "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg -O preseed.cfg<enter><wait5>",
     "ERASE_DISKS=/dev/vda setup-alpine -f preseed.cfg<enter><wait5>",
     "${var.root_password }<enter><wait>",
-    "${var.root_password }<enter><wait>",
-    "<enter><wait30>",    # Setup a user? [no]
+    "${var.root_password }<enter><wait60>",
     "mount /dev/vda3 /mnt<enter><wait>",
     "echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config<enter><wait>",
     "umount /mnt<enter><wait>",
@@ -81,9 +80,7 @@ source "qemu" "alpine" {
 
 build {
   # TODO: Override fields with different values inside `build` block
-  sources = [
-    "source.qemu.alpine",
-  ]
+  sources = ["source.qemu.alpine"]
 
   # ESSENTIAL PACKAGES & SYSTEM HARDENING
   # 
@@ -92,10 +89,9 @@ build {
   #
   # Install the bare-minimum packages...
   provisioner "shell" {
-    only = ["source.qemu.alpine"]
-    script = [
-      "scripts/base.sh",
-      "scripts/sshd.sh"
+    scripts = [
+      "scripts/base.sh"
+      #"scripts/sshd.sh"
     ]
   }
 
@@ -124,12 +120,12 @@ build {
   #
   # Remove leftovers (e.g. cache, logs, temp files) and zero out the free image space.
   # 
-  provisioner "shell" {
-    scripts = [
-      "scripts/cleanup.sh",
-      "scripts/zerodisk.sh"
-    ]
-  }
+  // provisioner "shell" {
+  //   scripts = [
+  //     #"scripts/cleanup.sh",
+  //     #"scripts/zerodisk.sh"
+  //   ]
+  // }
 
   post-processor "manifest" {
     output     = "manifest.json"

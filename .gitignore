@@ -133,7 +133,5 @@ dmypy.json
 
 # Packer
 iso/
-*.iso
-*.iso.sha256
 output-*/
 manifest.json

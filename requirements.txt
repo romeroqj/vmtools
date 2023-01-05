@@ -1,4 +1,13 @@
+cfgv==3.3.1
 cloudpickle==2.1.0
+distlib==0.3.6
 doit==0.36.0
+filelock==3.9.0
+identify==2.5.12
 importlib-metadata==4.12.0
+nodeenv==1.7.0
+platformdirs==2.6.2
+pre-commit==2.21.0
+PyYAML==6.0
+virtualenv==20.17.1
 zipp==3.8.1
